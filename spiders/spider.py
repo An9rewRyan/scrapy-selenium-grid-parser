@@ -69,7 +69,7 @@ class MySpider(scrapy.Spider):
         goods_full = []
         driver = self.setup_webdriver()
         for good in goods:
-            good_full = self.parse_good(good['id'], driver = driver, to_save=True, for_celery=True)
+            good_full = self.parse_good(good['id'], driver = driver, to_save=True, for_celery=False)
             goods_full.append(good_full)
         print('задание закончено.')
         driver.quit()
@@ -167,6 +167,7 @@ class MySpider(scrapy.Spider):
            для сохранения во временном каталоге.
         """
         if not for_celery:
+            print(file_path)
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
         else:
             os.makedirs(os.path.dirname(f'results/current/{idx}.json'), exist_ok=True)

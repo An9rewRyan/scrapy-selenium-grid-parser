@@ -97,7 +97,7 @@ async def read_items(city: Optional[int] = Query(None, gt=0, lt=1000, descriptio
                      mincost: Optional[int] = Query(None, gt=0, lt=100000, description="минимальная цена"),
                      maxcost: Optional[int] = Query(None, gt=0, lt=100000, description=" максимальная цена"), 
                      onsold: Optional[int] = Query(None, gt=-1, lt=2, description="доступность в продаже (1/0)"),     
-                     limit: Optional[int] = Query(None, gt=0, lt=31, description="пагинация результатов"),      
+                     limit: Optional[int] = Query(None, gt=0, lt=100, description="пагинация результатов"),      
                      ondiscount: Optional[int] = Query(None, gt=-1, lt=2, description="наличие скидки (1/0)"),
                     ):
     print(onsold, type(onsold))
