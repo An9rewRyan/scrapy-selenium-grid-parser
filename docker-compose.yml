@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+
+  celery_worker:
+    build: .
+    volumes:
+      - .:/app
+    command: celery -A tasks worker --loglevel=info
+    depends_on: 
+      - redis
+      - rabbitmq
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  firefox:
+    image: selenium/node-firefox:beta
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - HUB_HOST=selenium-hub
+
+  selenium-hub:
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    environment:
+      - SE_NODE_SESSION_TIMEOUT=30000
+      - SE_SESSION_REQUEST_TIMEOUT=30000
+      - SE_SESSION_RETRY_INTERVAL=5000
+      - LC_ALL=ru_RU.UTF-8
+      - LANG=ru_RU.UTF-8
+      - LANGUAGE=ru_RU.UTF-8
