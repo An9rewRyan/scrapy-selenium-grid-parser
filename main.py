@@ -143,8 +143,8 @@ async def read_items(city: Optional[int] = Query(None, gt=0, lt=1000, descriptio
         product_info_list.append(product_info)
     
     # Удаляем временные файлы
-    for f in os.listdir(dir_path):
-        os.remove(os.path.join(dir_path, f))
+    # for f in os.listdir(dir_path):
+    #     os.remove(os.path.join(dir_path, f))
 
     return product_info_list
 
